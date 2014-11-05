@@ -22,6 +22,12 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.ReviewsNewRoute = Ember.Route.extend({
+	model: function() {
+		return this.store.createRecord('book');
+	}
+});
+
 /*-------------------CONTROLLERS----------------------*/
 App.BooksController = Ember.ArrayController.extend({
 	sortProperties: ['title']
@@ -33,6 +39,17 @@ App.IndexController = Ember.Controller.extend({
 
 App.GenresController = Ember.ArrayController.extend({
 	sortProperties: ['name']
+});
+
+App.ReviewsNewController = Ember.Controller.extend({
+	actions: {
+		createReview: function() {
+			var controller = this;
+			this.get('model').save().then(function() {
+				controller.transitionToRoute('index');
+			});
+		}
+	}
 });
 
 /*-------------------ADAPTERS-------------------------*/
