@@ -4,24 +4,39 @@ App.Router.map(function() {
 	this.resource('book', { path: '/books/:book_id' });
 });
 
-
-
+/*-------------------ROUTES---------------------------*/
 App.IndexRoute = Ember.Route.extend({
   model: function() {
     return this.store.findAll('book');
   }
 });
 
+/*-------------------CONTROLLERS----------------------*/
+App.BooksController = Ember.ArrayController.extend({
+	sortProperties: ['title']
+});
+
+/*-------------------ADAPTERS-------------------------*/
 App.ApplicationAdapter = DS.FixtureAdapter.extend({
 
 });
 
+/*-------------------COMPONENTS-----------------------*/
+App.BookDetailsComponent = Ember.Component.extend({
+	classNameBindings: ['ratingClass'],
+	ratingClass: function() {
+		return "rating-" + this.get('book.rating');
+	}.property('book.rating')
+});
+
+/*-------------------MODELS---------------------------*/
 App.Book = DS.Model.extend({
 	title: DS.attr(),
 	author: DS.attr(),
 	description: DS.attr(),
 	rating: DS.attr('number'),
 	amazon_id: DS.attr(),
+	genre: DS.belongsTo('genre', {async: true}),
 	url: function(){
 		return "http://www.amazon.com/gp/product/"+this.get('amazon_id');
 	}.property('amazon_id'),
@@ -30,6 +45,12 @@ App.Book = DS.Model.extend({
 	}.property('amazon_id')
 });
 
+App.Genre = DS.Model.extend({
+	name: DS.attr(),
+	books: DS.hasMany('book', {async: true})
+});
+
+/*------------------FIXTURES--------------------------*/
 App.Book.FIXTURES = [
 	{
 	  id:1,
@@ -38,7 +59,8 @@ App.Book.FIXTURES = [
 	  description: "Probably my favorite science fiction book (and series) I've ever read. Hyperion is written in a style similar to The Canterbury Tales, in which a series of stories are told by the main characters. Each story is a gem in itself, but alude to the larger storyline. The scope of the story is ambitious - spanning time, planets religion and love.",
 	  amazon_id: "0553283685",
 	  rating: 5,
-	  amazon_id: '0553283685'
+	  amazon_id: '0553283685',
+	  genre: 1
 	},
 	{
 	  id:2,
@@ -47,7 +69,8 @@ App.Book.FIXTURES = [
 	  description: "Even though I respect Ive, I felt this biography only hit skin deep. It went over all the major events in his life, his passion for design, awards he achieved -- but that's really it. I dont't feel I know him anymore than before reading this.",
 	  amazon_id: "159184617X",
 	  rating: 2,
-	  amazon_id: '159184617X'
+	  amazon_id: '159184617X',
+	  genre: 3
 	},
 	{
 	  id:3,
@@ -56,6 +79,24 @@ App.Book.FIXTURES = [
 	  description: "Although this book focuses on the cognitive advantages to having children use technology from an early age, it is also an in depth look at how people can learn for themseves. As someone who was often distracted and bored at times during school, Mindstorms highlights some of the reasoning behind that feeling and what we can do as teachers to help minimize it.",
 	  amazon_id: "0465046746",
 	  rating: 5,
-	  amazon_id: '0465046746'
+	  amazon_id: '0465046746',
+	  genre: 3
+	}
+];
+
+App.Genre.FIXTURES = [
+	{
+		id: 1,
+		name: 'Science Fiction',
+		books: [1]
+	},
+	{
+		id: 2,
+		name: 'Fiction'
+	},
+	{
+		id: 3,
+		name: 'Non-Fiction',
+		books: [2,3]
 	}
 ];
