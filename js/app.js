@@ -2,18 +2,37 @@
 
 App.Router.map(function() {
 	this.resource('book', { path: '/books/:book_id' });
+	this.resource('genre', { path: '/genres/:genre_id' })
+	this.resource('reviews', function() {
+		this.route('new');
+	});
 });
 
 /*-------------------ROUTES---------------------------*/
 App.IndexRoute = Ember.Route.extend({
   model: function() {
-    return this.store.findAll('book');
+    return Ember.RSVP.hash({  //Will use RSVP object I don't change something
+    	books: this.store.findAll('book'),
+    	genres: this.store.findAll('genre')
+    }); 
+  },
+  setupController: function(controller, model){
+  	controller.set('books', model.books );
+  	controller.set('genres', model.genres);
   }
 });
 
 /*-------------------CONTROLLERS----------------------*/
 App.BooksController = Ember.ArrayController.extend({
 	sortProperties: ['title']
+});
+
+App.IndexController = Ember.Controller.extend({
+
+})
+
+App.GenresController = Ember.ArrayController.extend({
+	sortProperties: ['name']
 });
 
 /*-------------------ADAPTERS-------------------------*/

@@ -13,33 +13,53 @@
     
 
       {{outlet}}
-    </div>
-  </script>
+    </div></script>
 
   <script type="text/x-handlebars" data-template-name="index">
     <ol class='breadcrumb'>
-      <li class="active">Books</a>
+      <li class="active">Books</li>
     </ol>
-    <ul class="list-unstyled">
-      {{render 'books' this}}
-    </ul>
-  </script>
+
+    <div class="row">
+      <div class="col-sm-8">
+        {{render 'books' books}}
+      </div>
+      <div class="col-sm-4">
+        {{render 'genres' genres}}
+      </div>
+    </div></script>
 
   <script type="text/x-handlebars" data-template-name="books">
-    {{#each}}
-        {{book-details book=this tag='li' class='row' }}
-    {{/each}}
-  </script>
+    <ul class="list-unstyled">
+      {{#each}}
+          {{book-details book=this tag='li' class='row' }}
+      {{else}}
+          <li>There are no books</li>
+      {{/each}}
+    </ul></script>
+
+  <script type="text/x-handlebars" data-template-name="genres">
+    <h2>Genres</h2>
+    <ul class="list-unstyled">
+      {{#each}}
+        <li>{{#link-to 'genre' this class='label label-primary'}}{{name}}{{/link-to}}</li>
+      {{/each}}
+    </ul></script>
+
+  <script type="text/x-handlebars" data-template-name="genre">
+    <ol class='breadcrumb'>
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class="active">{{name}}</li>
+    </ol>
+    {{render 'books' books}}</script>
 
   <script type="text/x-handlebars" data-template-name="book">
     <ol class='breadcrumb'>
-      <li>{{#link-to 'index'}}Books{{/link-to}}</a>
-      <li class="active">{{title}}</a>
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class="active">{{title}}</li>
     </ol>
 
-    {{book-details book=this tag='div' class='row' }}
-
-  </script>
+    {{book-details book=this tag='div' class='row' }}</script>
 
   <script type="text/x-handlebars" data-template-name="components/book-details">
     <div class="col-sm-3">
@@ -56,8 +76,28 @@
         <p>{{book.description}}</p>
       </div>
 
-      <span class="label label-primary">{{book.genre.name}}</span>
+      <span>
+        {{#link-to 'genre' book.genre class='label label-primary'}}
+        {{book.genre.name}}{{/link-to}}
+      </span>
 
+    </div></script>
+  
+  <script type="text/x-handlebars" data-template-name="reviews/new">
+    <ol class="breadcrumb">
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class="active">New</li>
+    </ol>
+
+    <div class="row">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="book_title" class="col-sm-2 control-label">Book Title</label>
+          <div class="col-sm-9">
+            {{input class="form-control" id="book_title" placeholder="Book Title" valueBinding="model.title"}}
+          </div>
+        </div>
+      </form>
     </div>
   </script>
 
